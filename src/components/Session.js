@@ -121,6 +121,11 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
     }
   }, [elapsed]);
 
+  const showRoast = useCallback(() => {
+    setRoast(ROAST_MESSAGES[roastIndex.current % ROAST_MESSAGES.length]);
+    roastIndex.current++;
+  }, []);
+
   // Tab leave detection
   useEffect(() => {
     const handleVisibility = () => { if (document.hidden && !done) showRoast(); };
@@ -133,10 +138,6 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
     };
   }, [done, showRoast]);
 
-  const showRoast = useCallback(() => {
-    setRoast(ROAST_MESSAGES[roastIndex.current % ROAST_MESSAGES.length]);
-    roastIndex.current++;
-  }, []);
 
   const handleAudioUpload = (e) => {
     const file = e.target.files[0];
