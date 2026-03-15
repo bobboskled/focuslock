@@ -90,6 +90,17 @@ export default function Home({ onStart, stats }) {
           </div>
         )}
 
+
+      {/* F11 tip for desktop users */}
+      {window.innerWidth > 768 && (
+        <div style={{ background: "rgba(255,107,53,0.06)", border: "1px solid rgba(255,107,53,0.15)", borderRadius: "10px", padding: "9px 14px", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontSize: "13px" }}>⌨️</span>
+          <p style={{ fontSize: "11px", color: "#666", lineHeight: 1.5 }}>
+            Press <kbd style={{ background: "#1A1A1A", border: "1px solid #333", borderRadius: "4px", padding: "1px 6px", fontSize: "11px", color: "#FF6B35", fontFamily: "'JetBrains Mono', monospace" }}>F11</kbd> for fullscreen — way better experience.
+          </p>
+        </div>
+      )}
+
         {/* Duration label */}
         <div style={{ marginBottom: "24px" }}>
           <label style={{ fontSize: "10px", fontWeight: "700", color: "#666", letterSpacing: "0.14em", textTransform: "uppercase", display: "block", marginBottom: "10px" }}>
