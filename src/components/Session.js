@@ -131,7 +131,7 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [done]);
+  }, [done, showRoast]);
 
   const showRoast = useCallback(() => {
     setRoast(ROAST_MESSAGES[roastIndex.current % ROAST_MESSAGES.length]);

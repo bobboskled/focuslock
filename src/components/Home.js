@@ -17,7 +17,6 @@ export default function Home({ onStart, stats }) {
   const [sound, setSound]       = useState("rain");
   const [inputVal, setInputVal] = useState("25");
   const [shake, setShake]       = useState(false);
-  const [btnHover, setBtnHover] = useState(false);
 
   const handleInput = (v) => {
     setInputVal(v);
