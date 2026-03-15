@@ -43,6 +43,34 @@ const BUILTIN_SCENES = [
   { id: "silence", label: "🔇 Silence", audio: null, video: null },
 ];
 
+
+function playAlarm() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+
+    const playBeep = (freq, startTime, duration) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.4, startTime + 0.05);
+      gain.gain.linearRampToValueAtTime(0, startTime + duration);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    };
+
+    // 3 ascending beeps
+    playBeep(523, ctx.currentTime,       0.3);
+    playBeep(659, ctx.currentTime + 0.4, 0.3);
+    playBeep(784, ctx.currentTime + 0.8, 0.6);
+  } catch(e) {}
+}
+
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -75,6 +103,7 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
   const [customAudioUrl, setCustomAudioUrl] = useState(null);
   const [customBgUrl, setCustomBgUrl]       = useState(null);
   const [customBgIsVideo, setCustomBgIsVideo] = useState(false);
+  const [flash, setFlash] = useState(false);
 
   const audioRef    = useRef(null);
   const intervalRef = useRef(null);
@@ -125,7 +154,14 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setRemaining(r => {
-        if (r <= 1) { clearInterval(intervalRef.current); setDone(true); return 0; }
+        if (r <= 1) {
+          clearInterval(intervalRef.current);
+          playAlarm();
+          setFlash(true);
+          setTimeout(() => setFlash(false), 1500);
+          setTimeout(() => setDone(true), 1600);
+          return 0;
+        }
         return r - 1;
       });
       setElapsed(e => e + 1);
@@ -216,6 +252,11 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
       )}
       {/* Dark overlay */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(8,8,8,0.6) 0%, rgba(8,8,8,0.3) 50%, rgba(8,8,8,0.85) 100%)", zIndex: 1 }} />
+
+      {/* Flash overlay */}
+      {flash && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(255,107,53,0.3)", zIndex: 50, animation: "fadeOut 1.5s ease forwards", pointerEvents: "none" }} />
+      )}
 
       {/* Roast overlay */}
       {roast && (
