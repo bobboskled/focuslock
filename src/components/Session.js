@@ -86,12 +86,33 @@ export default function Session({ config, onComplete, onAbandon, settings }) {
   useEffect(() => {
     const audioSrc = customAudioUrl || scene.audio;
     if (!audioSrc) return;
+
     const audio = new Audio(audioSrc);
     audio.loop   = true;
     audio.volume = volume;
+
+    // Restart if it stops unexpectedly
+    const handleEnded = () => {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    };
+    const handleStalled = () => {
+      audio.load();
+      audio.play().catch(() => {});
+    };
+
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("stalled", handleStalled);
+
     audio.play().catch(() => {});
     audioRef.current = audio;
-    return () => { audio.pause(); audio.src = ""; };
+
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("stalled", handleStalled);
+      audio.pause();
+      audio.src = "";
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene.audio, customAudioUrl]);
 
