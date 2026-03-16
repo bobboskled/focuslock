@@ -189,6 +189,20 @@ export default function Home({ onStart, stats }) {
         </button>
 
       </div>
+
+      {/* Support button */}
+      <div style={{ textAlign: "center", marginBottom: "24px" }}>
+        <a href="https://paypal.me/YOURLINK"
+          target="_blank" rel="noopener noreferrer"
+          style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "10px 20px", background: "#0E0E0E", border: "1px solid #1A1A1A", borderRadius: "10px", color: "#555", fontSize: "12px", fontWeight: "600", textDecoration: "none", transition: "all 0.2s" }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "#FF6B35"; e.currentTarget.style.color = "#FF6B35"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "#1A1A1A"; e.currentTarget.style.color = "#555"; }}
+        >
+          <span style={{ fontSize: "14px" }}>💛</span>
+          Support FocusLock
+        </a>
+      </div>
+
     </>
   );
 }
